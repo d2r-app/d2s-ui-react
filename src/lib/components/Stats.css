@@ -1,0 +1,19 @@
+.d2s-stats {
+  width: 520px;
+}
+
+.d2s-stats__section {
+  margin-bottom: 10px;
+}
+
+.d2s-stats__row {
+  display: flex;
+}
+
+.d2s-stats__item__label {
+  color: rgb(193, 161, 129);
+}
+
+.d2s-stats__item__paren {
+  color: rgb(193, 161, 129);
+}

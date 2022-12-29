@@ -1,0 +1,27 @@
+.d2s-hero__section {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.d2s-hero__menu {
+  border-bottom: 1px solid rgba(184, 134, 11, 0.5);
+}
+
+.d2s-hero__menu__btn {
+  background-color: transparent;
+  border: 0;
+  color: #d3d3d3;
+  margin-right: 25px;
+}
+
+.d2s-hero__menu__btn:last-child {
+  margin-right: 0;
+}
+
+.d2s-hero__menu__btn:hover {
+  text-decoration: underline;
+}
+
+.d2s-hero__menu__close {
+  float: right;
+}

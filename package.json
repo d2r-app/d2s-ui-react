@@ -1,0 +1,63 @@
+{
+  "name": "d2s-ui-react",
+  "version": "1.0.1",
+  "author": "d2r-app",
+  "license": "ISC",
+  "description": "React components based on d2s-ui",
+  "dependencies": {
+    "jimp": "^0.16.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-scripts": "5.0.1",
+    "react-tooltip": "^4.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "axios": "^0.27.2",
+    "babel-loader": "^8.2.5",
+    "cors": "^2.8.5",
+    "css-loader": "^6.7.1",
+    "express": "^4.18.1",
+    "style-loader": "^3.3.1",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "npm run sass && react-scripts start",
+    "sass": "sass --sourcemap=none src/styles/d2s-ui.scss src/lib/components/d2s-ui.css",
+    "webpack": "rm -rf dist && webpack",
+    "d2s": "tar czf dist/d2s.tar.gz -C svr d2s",
+    "build": "npm run sass && npm run webpack && npm run d2s"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      "Electron 18.1",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d2r-app/d2s-ui-react.git"
+  }
+}

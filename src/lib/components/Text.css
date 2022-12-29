@@ -1,0 +1,12 @@
+.d2s-text {
+  margin-left: 6px;
+}
+
+.d2s-text .d2s-item__name-part {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.d2s-text .d2s-item__name-part + .d2s-item__name-part > .d2s-item__type {
+  color: dimgray;
+}
