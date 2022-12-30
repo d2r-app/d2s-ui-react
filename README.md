@@ -2,9 +2,9 @@
 
 React components based on [d2s-ui](https://github.com/dschu012/d2s-ui)
 
-Includes [d2s v2.0.34](https://github.com/dschu012/d2s/releases/tag/v2.0.34)
-
-Used by [d2r.app](https://d2r.app)
+- Includes [d2s v2.0.34](https://github.com/dschu012/d2s/releases/tag/v2.0.34)
+- Implements stat layout from [PoD](https://pathofdiablo.com)
+- Used by [d2r.app](https://d2r.app)
 
 ## Table of contents
 
