@@ -25,8 +25,9 @@ const Equipped = (props) => {
     'waist', 'feet', 'hands',
     'alt_right_hand', 'alt_left_hand'
   ];
-  props.hero.items.map(item => lu[item.equipped_id] && (lu[lu[item.equipped_id]] = item));
-  const items = props.hero.items.filter(item => item.location_id === 1);
+  const hero = props.hero;
+  const items = (hero.is_dead ? hero.corpse_items : hero.items).filter(item => item.location_id === 1);
+  items.map(item => lu[item.equipped_id] && (lu[lu[item.equipped_id]] = item));
   const api = props.api;
   const handleImgReq = props.handleImgReq;
   const itemAttrs = { detailed, api, handleImgReq, imgCache };
