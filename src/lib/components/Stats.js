@@ -41,7 +41,16 @@ const Stats = (props) => {
     // Define helper functions
     const getValue = (key) => attributes[key] || bonuses[key] || 0;
     const getResist = (key, difficulty) => {
-      const val = bonuses[`${key}resist`] || 0;
+      let val = bonuses[`${key}resist`] || 0;
+      if (header.quests_normal?.act_v?.prison_of_ice?.consumed_scroll) {
+        val += 10;
+      }
+      if (header.quests_nm?.act_v?.prison_of_ice?.consumed_scroll) {
+        val += 10;
+      }
+      if (header.quests_hell?.act_v?.prison_of_ice?.consumed_scroll) {
+        val += 10;
+      }
       const exp = header.status.expansion;
       if (difficulty === 'hell') {
         return val - (exp ? 100 : 50);
