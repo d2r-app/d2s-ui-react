@@ -261,7 +261,12 @@ const Stats = (props) => {
         ]
       ]
     ]);
-  }, [attributes, header.class, header.last_played, header.level, header.name, header.status, hero.is_dead, hero.mod, item_bonuses, items]);
+  }, [
+      attributes, header.class, header.last_played, header.level, header.name, header.status, hero.is_dead, hero.mod, item_bonuses, items,
+      header.quests_normal?.act_v?.prison_of_ice?.consumed_scroll,
+      header.quests_nm?.act_v?.prison_of_ice?.consumed_scroll,
+      header.quests_hell?.act_v?.prison_of_ice?.consumed_scroll
+  ]);
 
 	return (
 		<div className="d2s-hero__component d2s-stats">
