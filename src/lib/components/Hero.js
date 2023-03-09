@@ -4,6 +4,7 @@ import Equipped from './Equipped';
 import Golem from './Golem';
 import Inventory from './Inventory';
 import Mercenary from './Mercenary';
+import Skills from './Skills';
 import Stash from './Stash';
 import Stats from './Stats';
 import Text from './Text';
@@ -37,6 +38,7 @@ const Hero = (props) => {
           {section === 'hero' && <div>
             <Equipped {...sectionAttrs} />
             <Inventory {...sectionAttrs} />
+            <Skills hero={hero} />
             {hero.golem_item && <Golem {...sectionAttrs} />}
           </div>}
           {section === 'storage' && <div>

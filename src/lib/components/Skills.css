@@ -1,0 +1,6 @@
+.d2s-skills__header {
+  display: inline-block;
+  margin-bottom: 1em;
+  padding: 1px 6px;
+  border-bottom: 1px solid rgba(184, 134, 11, 0.5);
+}
