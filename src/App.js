@@ -12,7 +12,7 @@ function App() {
 
 	async function loadHero() {
     try {
-      const res = await axios.get('http://localhost:8080/api/hero');
+      const res = await axios.get(`http://${window.location.hostname}:8080/api/hero`);
       setHero({ ...res.data });
 		}
     catch (e) {
@@ -23,7 +23,7 @@ function App() {
   return (
     <div>
       <React.StrictMode>
-			   <Hero hero={hero} api="http://localhost:8080/api/d2s/img" />
+			   <Hero hero={hero} api={`http://${window.location.hostname}:8080/api/d2s/img`} />
       </React.StrictMode>
     </div>
   );
