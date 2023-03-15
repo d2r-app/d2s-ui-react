@@ -4,7 +4,8 @@ import './d2s-ui.css';
 
 const Equipped = (props) => {
 
-  const [altDisplayed, setAltDisplayed] = useState(false);
+  const altDisplayed = props.altDisplayed;
+  const setAltDisplayed = props.setAltDisplayed;
   const [detailed, setDetailed] = useState(false);
   const imgCache = {};
 

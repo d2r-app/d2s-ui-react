@@ -16,6 +16,7 @@ const Hero = (props) => {
   const api = props.api;
   const handleImgReq = props.handleImgReq;
   const showImages = api || handleImgReq;
+  const [altDisplayed, setAltDisplayed] = useState(false);
   const [section, setSection] = useState(showImages ? 'hero' : 'text');
   const sectionAttrs = { hero, api, handleImgReq };
 
@@ -25,7 +26,7 @@ const Hero = (props) => {
       {hero.msg && <div className="d2s-hero__msg">{hero.msg}</div>}
       {hero.header?.name && <div>
         <div className="d2s-hero__section">
-          <Stats hero={hero} />
+          <Stats hero={hero} altDisplayed={altDisplayed} />
         </div>
         <div className="d2s-hero__section">
           <div className="d2s-hero__menu">
@@ -36,7 +37,7 @@ const Hero = (props) => {
             {props.onClose && <button className="d2s-hero__menu__btn d2s-hero__menu__close" onClick={props.onClose}>x</button>}
           </div>
           {section === 'hero' && <div>
-            <Equipped {...sectionAttrs} />
+            <Equipped {...sectionAttrs} altDisplayed={altDisplayed} setAltDisplayed={setAltDisplayed} />
             <Inventory {...sectionAttrs} />
             <Skills hero={hero} />
             {hero.golem_item && <Golem {...sectionAttrs} />}

@@ -4,42 +4,15 @@ import './Stats.css';
 const Stats = (props) => {
 
   const hero = props.hero;
-  const { attributes, header, item_bonuses, items } = { ...hero };
+  const { attributes, header, skills } = { ...hero };
   const [sections, setSections] = useState([]);
+
 
   // On load
   useEffect(() => {
 
-    // Total bonuses, build lookup
-    const bonuses = {};
-    item_bonuses.forEach(bonus => {
-      let value = 0;
-      bonus.values.forEach(v => value += v);
-      bonuses[bonus.name] = value;
-    });
-    bonuses.strength = bonuses.strength || 0;
-    bonuses.dexterity = bonuses.dexterity || 0;
-    bonuses.vitality = bonuses.vitality || 0;
-    bonuses.energy = bonuses.energy || 0;
-
-    // Total defenses
-    let defense = 0;
-    let altDefense = 0;
-    items.filter(item => item.equipped_id).forEach(item => {
-      if (item.equipped_id === 4 || item.equipped_id === 5) {
-        defense += item.defense_rating || 0;
-      }
-      else if (item.equipped_id === 11 || item.equipped_id === 12) {
-        altDefense += item.defense_rating || 0;
-      }
-      else {
-        defense += item.defense_rating || 0;
-        altDefense += item.defense_rating || 0;
-      }
-    });
-
     // Define helper functions
-    const getValue = (key) => attributes[key] || bonuses[key] || 0;
+    const getValue = (key) => overrides[key] || attributes[key] || bonuses[key] || 0;
     const getResist = (key, difficulty) => {
       let val = bonuses[`${key}resist`] || 0;
       if (header.quests_normal?.act_v?.prison_of_ice?.consumed_scroll) {
@@ -62,6 +35,165 @@ const Stats = (props) => {
     }
     const getMaxResist = (key) => 75 + (bonuses[`max${key}resist`] || 0);
     const getAbsorb = (key, pct) => bonuses[`item_absorb${key}` + (pct ? '_percent' : '')] || 0;
+
+    // Get equipped hero items
+    let items = (hero.is_dead ? hero.corpse_items : hero.items).filter(item => {
+      if (item.location_id !== 1) {
+        return false;
+      }
+      if ((item.equipped_id === 4 || item.equipped_id === 5) && props.altDisplayed) {
+        return false;
+      }
+      if ((item.equipped_id === 11 || item.equipped_id === 12) && !props.altDisplayed) {
+        return false;
+      }
+      return true;
+    });
+
+    // Include charms from inventory
+    items = [...items, ...hero.items.filter(item => /^cm(1|2|3)$/.test(item.type))];
+
+    // Total bonuses, build lookup
+    // NOTE:
+    //  Totaling values from hero.item_bonuses directly provides incorrect results (e.g. resists, item_magicbonus, item_goldbonus)
+    //  Instead, use values from each item's displayed_combined_magic_attributes
+    const bonuses = { strength: 0, dexterity: 0, vitality: 0, energy: 0, item_allskills: 0 };
+    const getBonusFromDescription = (desc = '', regex) => {
+      const matches = desc.toString().match(regex);
+      if (matches && matches[1]) {
+        return parseInt(matches);
+      }
+      return 0;
+    };
+    items.forEach(item => {
+      item.displayed_combined_magic_attributes.forEach(bonus => {
+        let name, value = getBonusFromDescription(bonus.description, /^(\d+)% Better Chance of Getting Magic Items$/);
+        if (value) {
+          name = 'item_magicbonus';
+        }
+        else {
+          value = getBonusFromDescription(bonus.description, /^(\d+)% Extra Gold from Monsters$/);
+          if (value) {
+            name = 'item_goldbonus';
+          }
+        }
+        // Generic values, calculated OP value takes precedence
+        if (!name) {
+          name = bonus.name;
+          if (bonus.op_value) {
+            value = bonus.op_value;
+          }
+          else if (Array.isArray(bonus.values) && bonus.values.length) {
+            // Values are either [singular] or [min, max]
+            value = bonus.values[bonus.values.length - 1];
+          }
+        }
+        // Add value to bonus lookup
+        bonuses[name] = (bonuses[name] || 0) + value;
+      });
+    });
+
+    // Total max HP and MP
+    // NOTE: Existing attributes for max_hp/max_mana are not correct
+    const overrides = { max_hp: 0, max_mana: 0 };
+    const classes = {
+      Amazon: {
+        max_hp: { start: 50, startPoints: 20, perPoint: 3, perLevel: 2 },
+        max_mana: { start: 15, startPoints: 15, perPoint: 1.5, perLevel: 1.5 }
+      },
+      Assassin: {
+        max_hp: { start: 50, startPoints: 20, perPoint: 3, perLevel: 2 },
+        max_mana: { start: 25, startPoints: 25, perPoint: 1.75, perLevel: 1.5 }
+      },
+      Barbarian: {
+        max_hp: { start: 55, startPoints: 25, perPoint: 4, perLevel: 2 },
+        max_mana: { start: 10, startPoints: 10, perPoint: 1, perLevel: 1 }
+      },
+      Druid: {
+        max_hp: { start: 55, startPoints: 25, perPoint: 2, perLevel: 1.5 },
+        max_mana: { start: 20, startPoints: 20, perPoint: 2, perLevel: 2 }
+      },
+      Necromancer: {
+        max_hp: { start: 45, startPoints: 15, perPoint: 2, perLevel: 1.5 },
+        max_mana: { start: 25, startPoints: 25, perPoint: 2, perLevel: 2 }
+      },
+      Paladin: {
+        max_hp: { start: 55, startPoints: 25, perPoint: 3, perLevel: 2 },
+        max_mana: { start: 15, startPoints: 15, perPoint: 1.5, perLevel: 1.5 }
+      },
+      Sorceress: {
+        max_hp: { start: 40, startPoints: 10, perPoint: 2, perLevel: 1 },
+        max_mana: { start: 35, startPoints: 35, perPoint: 2, perLevel: 2 }
+      }
+    };
+    [
+      { key: 'max_hp', attrKey: 'vitality', bonusKey: 'maxhp' },
+      { key: 'max_mana', attrKey: 'energy', bonusKey: 'maxmana' }
+    ].forEach(override => {
+      const { key, attrKey, bonusKey } = { ...override };
+      const info = classes[header.class] ? classes[header.class][key] : null;
+      if (info) {
+        overrides[key] = info.start;
+        overrides[key] += info.perLevel * (header.level - 1);
+        overrides[key] += info.perPoint * (attributes[attrKey] + bonuses[attrKey] - info.startPoints);
+        overrides[key] += (bonuses[bonusKey] || 0);
+        if (key === 'max_hp') {
+          if (header.quests_normal?.act_iii?.the_golden_bird?.is_completed) {
+            overrides[key] += 20;
+          }
+          if (header.quests_nm?.act_iii?.the_golden_bird?.is_completed) {
+            overrides[key] += 20;
+          }
+          if (header.quests_hell?.act_iii?.the_golden_bird?.is_completed) {
+            overrides[key] += 20;
+          }
+        }
+        overrides[key] = Math.floor(overrides[key]);
+      }
+    });
+
+    // Total defenses
+    overrides.defense = (getValue('dexterity') + bonuses.dexterity) / 4;
+    items.filter(item => item.equipped_id).forEach(item => {
+      let defense = item.defense_rating;
+      if (!defense) {
+        return;
+      }
+      const edPct = item.displayed_combined_magic_attributes.filter(attr => attr.name === 'item_armor_percent')[0];
+      if (edPct) {
+        defense *= (edPct.values[0] / 100 + 1);
+      }
+      const ed = item.displayed_combined_magic_attributes.filter(attr => attr.name === 'armorclass')[0];
+      if (ed) {
+        defense += ed.values[0];
+      }
+      overrides.defense += defense;
+    });
+    overrides.defense = Math.floor(overrides.defense);
+
+    // Total increased elemental damage/pierce
+    overrides.passive_fire_mastery = bonuses.passive_fire_mastery || 0;
+    overrides.passive_ltng_mastery = bonuses.passive_ltng_mastery || 0;
+    overrides.passive_cold_mastery = bonuses.passive_cold_mastery || 0;
+    overrides.passive_pois_mastery = bonuses.passive_pois_mastery || 0;
+    overrides.passive_fire_pierce = bonuses.passive_fire_pierce || 0;
+    overrides.passive_ltng_pierce = bonuses.passive_ltng_pierce || 0;
+    overrides.passive_cold_pierce = bonuses.passive_cold_pierce || 0;
+    overrides.passive_pois_pierce = bonuses.passive_pois_pierce || 0;
+    if (header.class === 'Sorceress') {
+      let skill = skills.filter(skill => skill.name === 'Fire Mastery')[0];
+      if (skill && skill.points) {
+        overrides.passive_fire_mastery += (skill.points + bonuses.item_allskills +  - 1) * 7 + 30;
+      }
+      skill = skills.filter(skill => skill.name === 'Lightning Mastery')[0];
+      if (skill && skill.points) {
+        overrides.passive_ltng_mastery += (skill.points + bonuses.item_allskills +  - 1) * 12 + 50;
+      }
+      skill = skills.filter(skill => skill.name === 'Cold Mastery')[0];
+      if (skill && skill.points) {
+        overrides.passive_cold_pierce += (skill.points + bonuses.item_allskills +  - 1) * 5 + 20;
+      }
+    }
 
     // Dynamic info items are type/mod/status, e.g. LoD hardcore/A Mod/Alive, but only show when necessary and are bottom justified
     const getInfoItem = (num) => {
@@ -115,20 +247,50 @@ const Stats = (props) => {
       // Base stats
       [
         [
-          newItem(7, { label: 'Strength', value: getValue('strength'), value2: ` (${bonuses.strength})`, cls2: 'd2s-stats__item__paren' }),
-          newItem(5, { label: 'Health', value: getValue('max_hp') || 0, value2: ' (' + getValue('current_hp')  + ')', cls2: 'd2s-stats__item__paren' })
+          newItem(7, {
+            label: 'Strength',
+            value: getValue('strength') + bonuses.strength,
+            value2: bonuses.strength ? ` (${getValue('strength')})` : '',
+            cls2: 'd2s-stats__item__paren'
+          }),
+          newItem(5, {
+            label: 'Health',
+            value: getValue('current_hp'),
+            value2: getValue('current_hp') !== getValue('max_hp') ? ' (' + getValue('max_hp')  + ')' : '',
+            cls2: 'd2s-stats__item__paren'
+          })
         ],
         [
-          newItem(7, { label: 'Dexterity', value: getValue('dexterity'), value2: ` (${bonuses.dexterity})`, cls2: 'd2s-stats__item__paren' }),
-          newItem(5, { label: 'Mana', value: getValue('max_mana') || 0, value2: ' (' + getValue('current_mana') + ')', cls2: 'd2s-stats__item__paren' })
+          newItem(7, {
+            label: 'Dexterity',
+            value: getValue('dexterity') + bonuses.dexterity,
+            value2: bonuses.dexterity ? ` (${getValue('dexterity')})` : '',
+            cls2: 'd2s-stats__item__paren'
+          }),
+          newItem(5, {
+            label: 'Mana',
+            value: getValue('current_mana'),
+            value2: getValue('current_mana') !== getValue('max_mana') ? ' (' + getValue('max_mana') + ')' : '',
+            cls2: 'd2s-stats__item__paren'
+          })
         ],
         [
-          newItem(7, { label: 'Vitality', value: getValue('vitality'), value2: ` (${bonuses.vitality})`, cls2: 'd2s-stats__item__paren' }),
+          newItem(7, {
+            label: 'Vitality',
+            value: getValue('vitality') + bonuses.vitality,
+            value2: bonuses.vitality ? ` (${getValue('vitality')})`: '',
+            cls2: 'd2s-stats__item__paren'
+          }),
           newItem(5, { label: 'Damage to Mana', value: getValue('item_damagetomana'), units: '%' })
         ],
         [
-          newItem(7, { label: 'Energy', value: getValue('energy'), value2: ` (${bonuses.energy})`, cls2: 'd2s-stats__item__paren' }),
-          newItem(5, { label: 'Defense', value: defense, value2: `, ${altDefense}` })
+          newItem(7, {
+            label: 'Energy',
+            value: getValue('energy') + bonuses.energy,
+            value2: bonuses.energy ? ` (${getValue('energy')})` : '',
+            cls2: 'd2s-stats__item__paren'
+          }),
+          newItem(5, { label: 'Defense', value: getValue('defense').toLocaleString() })
         ]
       ],
       // Resist/absorb/dr
@@ -149,20 +311,6 @@ const Stats = (props) => {
         ],
         [
           newItem(7, {
-            label: 'Cold Resist',
-            value: getResist('cold'), cls: 'blue', divider: ' / ',
-            value2: getResist('cold', 'nm'), cls2: 'blue', divider2: ' / ',
-            value3: getResist('cold', 'hell'), cls3: 'blue', divider3: ' ',
-            value4: '(' + getMaxResist('cold') + ')', cls4: 'd2s-stats__item__paren'
-          }),
-          newItem(5, {
-            label: 'Cold Absorb',
-            value: getAbsorb('cold'), cls: 'blue', divider: ', ',
-            value2: getAbsorb('cold', true), cls2: 'blue', units2: '%'
-          })
-        ],
-        [
-          newItem(7, {
             label: 'Lightning Resist',
             value: getResist('light'), cls: 'yellow', divider: ' / ',
             value2: getResist('light', 'nm'), cls2: 'yellow', divider2: ' / ',
@@ -173,6 +321,20 @@ const Stats = (props) => {
             label: 'Lightning Absorb',
             value: getAbsorb('light'), cls: 'yellow', divider: ', ',
             value2: getAbsorb('light', true), cls2: 'yellow', units2: '%'
+          })
+        ],
+        [
+          newItem(7, {
+            label: 'Cold Resist',
+            value: getResist('cold'), cls: 'blue', divider: ' / ',
+            value2: getResist('cold', 'nm'), cls2: 'blue', divider2: ' / ',
+            value3: getResist('cold', 'hell'), cls3: 'blue', divider3: ' ',
+            value4: '(' + getMaxResist('cold') + ')', cls4: 'd2s-stats__item__paren'
+          }),
+          newItem(5, {
+            label: 'Cold Absorb',
+            value: getAbsorb('cold'), cls: 'blue', divider: ', ',
+            value2: getAbsorb('cold', true), cls2: 'blue', units2: '%'
           })
         ],
         [
@@ -252,7 +414,7 @@ const Stats = (props) => {
       // Adventure
       [
         [
-          newItem(7, { label: 'Experience', value: getValue('experience') }),
+          newItem(7, { label: 'Experience', value: getValue('experience').toLocaleString() }),
           newItem(5, { label: 'Gold Find', value: getValue('item_goldbonus') })
         ],
         [
@@ -261,12 +423,7 @@ const Stats = (props) => {
         ]
       ]
     ]);
-  }, [
-      attributes, header.class, header.last_played, header.level, header.name, header.status, hero.is_dead, hero.mod, item_bonuses, items,
-      header.quests_normal?.act_v?.prison_of_ice?.consumed_scroll,
-      header.quests_nm?.act_v?.prison_of_ice?.consumed_scroll,
-      header.quests_hell?.act_v?.prison_of_ice?.consumed_scroll
-  ]);
+  }, [hero, attributes, header, skills, props.altDisplayed]);
 
 	return (
 		<div className="d2s-hero__component d2s-stats">
