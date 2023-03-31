@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Grid from './Grid';
 import Items from './Items';
 import './d2s-ui.css';
+import './d2s-ui-react.css';
 
 const Inventory = (props) => {
 
@@ -20,7 +21,7 @@ const Inventory = (props) => {
   const items = props.hero.items.filter(item => item.location_id === 0 && item.alt_position_id === 1);
 
 	return (
-		<div className="d2s-hero__component d2s-inventory">
+		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-inventory'}>
       <div className="d2s-hero__component__name">
 			   <h4>{props.headerLabel}</h4>
       </div>

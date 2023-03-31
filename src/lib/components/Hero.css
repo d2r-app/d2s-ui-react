@@ -1,3 +1,7 @@
+.d2s-hero--compact {
+  width: 294px;
+}
+
 .d2s-hero__section {
   display: inline-block;
   vertical-align: top;
@@ -5,13 +9,22 @@
 
 .d2s-hero__menu {
   border-bottom: 1px solid rgba(184, 134, 11, 0.5);
+  display: flex;
+  justify-content: space-between;
+}
+
+.d2s-hero--compact .d2s-hero__menu {
+  width: 278px;
 }
 
 .d2s-hero__menu__btn {
   background-color: transparent;
   border: 0;
-  color: #d3d3d3;
-  margin-right: 25px;
+  color: #adadad;
+}
+
+.d2s-hero--compact .d2s-hero__menu__btn {
+  color: darkgoldenrod;
 }
 
 .d2s-hero__menu__btn:last-child {

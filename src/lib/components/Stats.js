@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import './d2s-ui-react.css';
 import './Stats.css';
 
 const Stats = (props) => {
 
   const hero = props.hero;
+  const compact = props.compact;
   const { attributes, header, skills } = { ...hero };
   const [sections, setSections] = useState([]);
-
 
   // On load
   useEffect(() => {
@@ -197,7 +198,7 @@ const Stats = (props) => {
 
     // Dynamic info items are type/mod/status, e.g. LoD hardcore/A Mod/Alive, but only show when necessary and are bottom justified
     const getInfoItem = (num) => {
-      let item = newItem(5);
+      let item = {};
       if (!header.status) {
         return item;
       }
@@ -235,203 +236,251 @@ const Stats = (props) => {
       return item;
     };
 
-    // Build sections
-    const newItem = (flex, item = {}) => ({ style: { flex: flex }, ...item });
-    setSections([
-      // Character info, dynamic items are type/mod/status
-      [
-        [newItem(7, { label: 'Name', value: header.name }), getInfoItem(1)],
-        [newItem(7, { label: 'Level', value: header.level }), getInfoItem(2)],
-        [newItem(7, { label: 'Class', value: header.class }), getInfoItem(3)]
-      ],
-      // Base stats
-      [
+    const getExperienceItem = (props = {}) => ({ label: 'Experience', value: getValue('experience').toLocaleString(), ...props });
+    const getLastPlayedItem = (props = {}) => ({ label: 'Updated', value: new Date(header.last_played * 1000).toLocaleString(), ...props });
+    const getMagicFindItem = (props = {}) => ({ label: 'Magic Find', value: getValue('item_magicbonus'), ...props });
+    const getGoldFindItem = (props = {}) => ({ label: 'Gold Find', value: getValue('item_goldbonus'), ...props });
+
+    // Build all sections
+    const allSections = [];
+
+    // Header info, dynamic items are type/mod/status
+    allSections.push({
+      id: 'header',
+      items: [
         [
-          newItem(7, {
+          { label: 'Name', value: header.name },
+          { label: 'Level', value: header.level },
+          { label: 'Class', value: header.class }
+        ],
+        [getInfoItem(1), getInfoItem(2), getInfoItem(3)]
+      ]
+    });
+
+    // Basic stats
+    const damageToManaItem = compact ? {} : { label: 'Damage to Mana', value: getValue('item_damagetomana'), units: '%' };
+    const defenseItem = compact ? {} : { label: 'Defense', value: getValue('defense').toLocaleString() };
+    allSections.push({
+      id: 'basic',
+      items: [
+        [
+          {
             label: 'Strength',
             value: getValue('strength') + bonuses.strength,
             value2: bonuses.strength ? ` (${getValue('strength')})` : '',
             cls2: 'd2s-stats__item__paren'
-          }),
-          newItem(5, {
-            label: 'Health',
-            value: getValue('current_hp'),
-            value2: getValue('current_hp') !== getValue('max_hp') ? ' (' + getValue('max_hp')  + ')' : '',
-            cls2: 'd2s-stats__item__paren'
-          })
-        ],
-        [
-          newItem(7, {
+          },
+          {
             label: 'Dexterity',
             value: getValue('dexterity') + bonuses.dexterity,
             value2: bonuses.dexterity ? ` (${getValue('dexterity')})` : '',
             cls2: 'd2s-stats__item__paren'
-          }),
-          newItem(5, {
-            label: 'Mana',
-            value: getValue('current_mana'),
-            value2: getValue('current_mana') !== getValue('max_mana') ? ' (' + getValue('max_mana') + ')' : '',
-            cls2: 'd2s-stats__item__paren'
-          })
-        ],
-        [
-          newItem(7, {
+          },
+          {
             label: 'Vitality',
             value: getValue('vitality') + bonuses.vitality,
             value2: bonuses.vitality ? ` (${getValue('vitality')})`: '',
             cls2: 'd2s-stats__item__paren'
-          }),
-          newItem(5, { label: 'Damage to Mana', value: getValue('item_damagetomana'), units: '%' })
-        ],
-        [
-          newItem(7, {
+          },
+          {
             label: 'Energy',
             value: getValue('energy') + bonuses.energy,
             value2: bonuses.energy ? ` (${getValue('energy')})` : '',
             cls2: 'd2s-stats__item__paren'
-          }),
-          newItem(5, { label: 'Defense', value: getValue('defense').toLocaleString() })
-        ]
-      ],
-      // Resist/absorb/dr
-      [
+          }
+        ],
         [
-          newItem(7, {
+          {
+            label: 'Health',
+            labelBreak: compact,
+            value: getValue('current_hp'),
+            value2: getValue('current_hp') !== getValue('max_hp') ? ' (' + getValue('max_hp')  + ')' : '',
+            cls2: 'd2s-stats__item__paren'
+          },
+          {
+            label: 'Mana',
+            labelBreak: compact,
+            value: getValue('current_mana'),
+            value2: getValue('current_mana') !== getValue('max_mana') ? ' (' + getValue('max_mana') + ')' : '',
+            cls2: 'd2s-stats__item__paren'
+          },
+          { ...damageToManaItem },
+          { ...defenseItem }
+        ]
+      ]
+    });
+
+    // Adventure (non-compact in misc)
+    if (compact) {
+      allSections.push({
+        id: 'adventure',
+        items: [
+          [getMagicFindItem()],
+          [getGoldFindItem()]
+        ]
+      });
+    }
+
+    // Reduction (resist/absorb/dr)
+    allSections.push({
+      id: 'reduction',
+      items: [
+        [
+          {
             label: 'Fire Resist',
+            labelBreak: compact,
             value: getResist('fire'), cls: 'red', divider: ' / ',
             value2: getResist('fire', 'nm'), cls2: 'red', divider2: ' / ',
             value3: getResist('fire', 'hell'), cls3: 'red', divider3: ' ',
             value4: '(' + getMaxResist('fire') + ')', cls4: 'd2s-stats__item__paren'
-          }),
-          newItem(5, {
-            label: 'Fire Absorb',
-            value: getAbsorb('fire'), cls: 'red', divider: ', ',
-            value2: getAbsorb('fire', true), cls2: 'red', units2: '%'
-          })
-        ],
-        [
-          newItem(7, {
+          },
+          {
             label: 'Lightning Resist',
+            labelBreak: compact,
             value: getResist('light'), cls: 'yellow', divider: ' / ',
             value2: getResist('light', 'nm'), cls2: 'yellow', divider2: ' / ',
             value3: getResist('light', 'hell'), cls3: 'yellow', divider3: ' ',
             value4: '(' + getMaxResist('light') + ')', cls4: 'd2s-stats__item__paren'
-          }),
-          newItem(5, {
-            label: 'Lightning Absorb',
-            value: getAbsorb('light'), cls: 'yellow', divider: ', ',
-            value2: getAbsorb('light', true), cls2: 'yellow', units2: '%'
-          })
-        ],
-        [
-          newItem(7, {
+          },
+          {
             label: 'Cold Resist',
+            labelBreak: compact,
             value: getResist('cold'), cls: 'blue', divider: ' / ',
             value2: getResist('cold', 'nm'), cls2: 'blue', divider2: ' / ',
             value3: getResist('cold', 'hell'), cls3: 'blue', divider3: ' ',
             value4: '(' + getMaxResist('cold') + ')', cls4: 'd2s-stats__item__paren'
-          }),
-          newItem(5, {
-            label: 'Cold Absorb',
-            value: getAbsorb('cold'), cls: 'blue', divider: ', ',
-            value2: getAbsorb('cold', true), cls2: 'blue', units2: '%'
-          })
-        ],
-        [
-          newItem(7, {
+          },
+          {
             label: 'Poison Resist',
+            labelBreak: compact,
             value: getResist('poison'), cls: 'green', divider: ' / ',
             value2: getResist('poison', 'nm'), cls2: 'green', divider2: ' / ',
             value3: getResist('poison', 'hell'), cls3: 'green', divider3: ' ',
             value4: '(' + getMaxResist('poison') + ')', cls4: 'd2s-stats__item__paren'
-          }),
-          newItem(5)
+          },
+          { label: 'Magic Resist', value: getResist('magic'), cls: 'orange' },
+          { label: compact ? 'MDR' : 'Magic Damage Reduction', value: getValue('magic_damage_reduction') }
         ],
         [
-          newItem(7, { label: 'Magic Resist', value: getResist('magic'), cls: 'orange' }),
-          newItem(5, { label: 'Magic Absorb', value: getAbsorb('magic'), cls: 'orange' })
-        ],
-        [
-          newItem(7, { label: 'Magic Damage Reduction', value: getValue('magic_damage_reduction') }),
-          newItem(5, {
-            label: 'Damage Reduction',
+          {
+            label: compact ? 'F Absorb' : 'Fire Absorb',
+            labelBreak: compact,
+            value: getAbsorb('fire'), cls: 'red', divider: ', ',
+            value2: getAbsorb('fire', true), cls2: 'red', units2: '%'
+          },
+          {
+            label: compact ? 'L Absorb' : 'Lightning Absorb',
+            labelBreak: compact,
+            value: getAbsorb('light'), cls: 'yellow', divider: ', ',
+            value2: getAbsorb('light', true), cls2: 'yellow', units2: '%'
+          },
+          {
+            label: compact ? 'C Absorb' : 'Cold Absorb',
+            labelBreak: compact,
+            value: getAbsorb('cold'), cls: 'blue', divider: ', ',
+            value2: getAbsorb('cold', true), cls2: 'blue', units2: '%'
+          },
+          { spacer: true },
+          { spacer: compact },
+          { label: compact ? 'M Absorb' : 'Magic Absorb', value: getAbsorb('magic'), cls: 'orange' },
+          {
+            label: compact ? 'DR' : 'Damage Reduction',
             value: bonuses.normal_damage_reduction || 0,
             divider: ', ',
             value2: bonuses.damageresist || 0,
             units2: '%'
-          })
-        ]
-      ],
-      // Offense/breakpoints
-      [
-        [
-          newItem(7, { label: 'Faster Cast Rate', value: getValue('item_fastercastrate') }),
-          newItem(5, { label: 'Pierce Chance', value: getValue('item_pierce') })
-        ],
-        [
-          newItem(7, { label: 'Faster Block Rate', value: getValue('item_fasterblockrate') }),
-          newItem(5, { label: 'Crushing Blow', value: getValue('item_crushingblow') })
-        ],
-        [
-          newItem(7, { label: 'Faster Hit Recovery', value: getValue('item_fastergethitrate') }),
-          newItem(5, { label: 'Deadly Strike', value: getValue('item_deadlystrike') })
-        ],
-        [
-          newItem(7, { label: 'Faster Run/Walk', value: getValue('item_fastermovevelocity') }),
-          newItem(5, { label: 'Critical Strike', value: getValue('item_criticalstrike') })
-        ],
-        [
-          newItem(7, { label: 'Increased Attack Speed', value: getValue('item_fasterattackrate') }),
-          newItem(5, { label: 'Open Wounds', value: getValue('item_openwounds') })
-        ]
-      ],
-      // Sustain
-      [
-        [
-          newItem(7, { label: 'Life Leech', value: getValue('lifedrainmindam') }),
-          newItem(5, { label: 'Mana Leech', value: getValue('manadrainmindam') })
-        ]
-      ],
-      // Elemental
-      [
-        [
-          newItem(7, { label: 'Inc. Fire Damage', value: getValue('passive_fire_mastery'), units: '%', cls: 'red' }),
-          newItem(5, { label: 'Fire Pierce', value: getValue('passive_fire_pierce'), units: '%', cls: 'red' })
-        ],
-        [
-          newItem(7, { label: 'Inc. Cold Damage', value: getValue('passive_cold_mastery'), units: '%', cls: 'blue' }),
-          newItem(5, { label: 'Cold Pierce', value: getValue('passive_cold_pierce'), units: '%', cls: 'blue' })
-        ],
-        [
-          newItem(7, { label: 'Inc. Lightning Damage', value: getValue('passive_ltng_mastery'), units: '%', cls: 'yellow' }),
-          newItem(5, { label: 'Lightning Pierce', value: getValue('passive_ltng_pierce'), units: '%', cls: 'yellow' })
-        ],
-        [
-          newItem(7, { label: 'Inc. Poison Damage', value: getValue('passive_poison_mastery'), units: '%', cls: 'green' }),
-          newItem(5, { label: 'Poison Pierce', value: getValue('passive_poison_pierce'), units: '%', cls: 'green' })
-        ]
-      ],
-      // Adventure
-      [
-        [
-          newItem(7, { label: 'Experience', value: getValue('experience').toLocaleString() }),
-          newItem(5, { label: 'Gold Find', value: getValue('item_goldbonus') })
-        ],
-        [
-          newItem(7, { label: 'Updated', value: new Date(header.last_played * 1000).toLocaleString() }),
-          newItem(5, { label: 'Magic Find', value: getValue('item_magicbonus') })
+          }
         ]
       ]
-    ]);
-  }, [hero, attributes, header, skills, props.altDisplayed]);
+    });
+
+    // Offense
+    allSections.push({
+      id: 'offense',
+      items: [
+        [
+          { label: 'Faster Cast', value: getValue('item_fastercastrate') },
+          { label: 'Faster Block', value: getValue('item_fasterblockrate') },
+          { label: compact ? 'Faster Hit Recov' : 'Faster Hit Recovery', value: getValue('item_fastergethitrate') },
+          { label: 'Faster Run/Walk', value: getValue('item_fastermovevelocity') },
+          { label: compact ? 'IAS' : 'Increased Attack Speed', value: getValue('item_fasterattackrate') }
+        ],
+        [
+          { label: compact ? 'Pierce' : 'Pierce Chance', value: getValue('item_pierce') },
+          { label: compact ? 'Crush' : 'Crushing Blow', value: getValue('item_crushingblow') },
+          { label: compact ? 'Deadly' : 'Deadly Strike', value: getValue('item_deadlystrike') },
+          { label: compact ? 'Critical' : 'Critical Strike', value: getValue('item_criticalstrike') },
+          { label: compact ? 'Wound' : 'Open Wounds', value: getValue('item_openwounds') }
+        ]
+      ]
+    });
+
+    // Sustain
+    allSections.push({
+      id: 'sustain',
+      items: [
+        [
+          { label: 'Life Leech', value: getValue('lifedrainmindam') }
+        ],
+        [
+          { label: 'Mana Leech', value: getValue('manadrainmindam') }
+        ]
+      ]
+    });
+
+    // Elemental
+    allSections.push({
+      id: 'elemental',
+      items: [
+        [
+          { label: compact ? 'Inc. Fire Dmg' : 'Inc. Fire Damage', value: getValue('passive_fire_mastery'), units: '%', cls: 'red' },
+          { label: compact ? 'Inc. Cold Dmg' : 'Inc. Cold Damage', value: getValue('passive_cold_mastery'), units: '%', cls: 'blue' },
+          { label: compact ? 'Inc. Light Dmg' : 'Inc. Lightning Damage', value: getValue('passive_ltng_mastery'), units: '%', cls: 'yellow' },
+          { label: compact ? 'Inc. Poison Dmg' : 'Inc. Poison Damage', value: getValue('passive_poison_mastery'), units: '%', cls: 'green' }
+        ],
+        [
+          { label: compact ? 'F Pierce' : 'Fire Pierce', value: getValue('passive_fire_pierce'), units: '%', cls: 'red' },
+          { label: compact ? 'C Pierce' : 'Cold Pierce', value: getValue('passive_cold_pierce'), units: '%', cls: 'blue' },
+          { label: compact ? 'L Pierce' : 'Lightning Pierce', value: getValue('passive_ltng_pierce'), units: '%', cls: 'yellow' },
+          { label: compact ? 'P Pierce' : 'Poison Pierce', value: getValue('passive_poison_pierce'), units: '%', cls: 'green' }
+        ]
+      ]
+    });
+
+    // Miscellaneous
+    if (compact) {
+      allSections.push({
+        id: 'misc',
+        items: [
+          [getExperienceItem(), getLastPlayedItem()]
+        ]
+      });
+    }
+    if (!compact) {
+      allSections.push({
+        id: 'misc',
+        items: [
+          [getExperienceItem(), getLastPlayedItem()],
+          [getGoldFindItem(), getMagicFindItem()]
+        ]
+      });
+    }
+
+    // Filter sections prior to rendering
+    const filterFn = props.filterFn ? props.filterFn : () => true;
+    setSections([...allSections.filter(section => filterFn(section.id))]);
+
+  }, [hero, compact, attributes, header, skills, props.altDisplayed, props.filterFn]);
 
 	return (
-		<div className="d2s-hero__component d2s-stats">
-      {sections.map((rows, index) => <div key={index} className="d2s-stats__section">
-        {rows.map((items, index) => <div key={index} className="d2s-stats__row">
-          {items.map((item, index) => <div key={index}  className="d2s-stats__item" style={item.style || {}}>
+		<div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-stats'}>
+      {sections.map(section => <div key={section.id} className="d2s-stats__section">
+        {section.items.map((items, index) => <div key={index} className="d2s-stats__items">
+          {items.map((item, index) => <div key={index} className="d2s-stats__item">
+            {item.spacer && <span className="d2s-stats__item__label">&nbsp;</span>}
             {item.label && <span className="d2s-stats__item__label">{item.label}:&nbsp;</span>}
-            {typeof item.value !== 'undefined' && <span>
+            {item.labelBreak && <br className="d2s-stats__br" />}
+            {typeof item.value !== 'undefined' && <span className="d2s-stats__first-value">
               <span className={'d2s-stats__item__value' + item.cls ? ` ${item.cls}` : ''}>{item.value}</span>
               <span className="d2s-stats__item__units">{item.units}</span>
             </span>}

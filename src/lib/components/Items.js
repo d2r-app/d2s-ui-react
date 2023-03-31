@@ -47,7 +47,7 @@ const Items = (props) => {
 
 	return (
 		<div className="d2s-items">
-      {props.text && <ul>
+      {props.text && <ul className="d2s-items__ul">
         {items.map(item =>
           <li key={`text-${item.location_id}-${item.position_x}-${item.position_y}`}>
             <Item item={item} text={true} />

@@ -1,0 +1,44 @@
+.d2s-hero__component--compact {
+  width: 294px !important;
+}
+
+/* Equipped */
+.d2s-hero__component--compact .right-tab,
+.d2s-hero__component--compact .right-hand,
+.d2s-hero__component--compact .hands {
+  left: 0px;
+}
+
+.d2s-hero__component--compact .right-finger {
+  left: 69px;
+}
+
+.d2s-hero__component--compact .head,
+.d2s-hero__component--compact .torso,
+.d2s-hero__component--compact .waist {
+  left: 106px;
+}
+
+.d2s-hero__component--compact .neck,
+.d2s-hero__component--compact .left-finger {
+  left: 175px;
+}
+
+.d2s-hero__component--compact .left-tab,
+.d2s-hero__component--compact .left-hand,
+.d2s-hero__component--compact .feet {
+  left: 212px;
+}
+
+/* Inventory and storage */
+.d2s-hero__component--compact.d2s-inventory,
+.d2s-hero__component--compact.d2s-stash,
+.d2s-hero__component--compact.d2s-cube {
+  zoom: 0.86;
+}
+
+/* Text */
+.d2s-hero__component--compact .d2s-items__ul {
+  padding-inline-start: 22px;
+  padding-inline-end: 16px;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Items from './Items';
 import './d2s-ui.css';
+import './d2s-ui-react.css';
 
 const Golem = (props) => {
 
@@ -30,7 +31,7 @@ const Golem = (props) => {
   const itemAttrs = { detailed, api, handleImgReq, imgCache };
 
 	return (
-		<div className="d2s-hero__component d2s-golem">
+		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-golem'}>
       <div className="d2s-hero__component__name">
 			   <h4>{props.headerLabel}</h4>
       </div>

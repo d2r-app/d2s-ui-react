@@ -8,26 +8,29 @@ import Skills from './Skills';
 import Stash from './Stash';
 import Stats from './Stats';
 import Text from './Text';
+import './d2s-ui-react.css';
 import './Hero.css';
 
 const Hero = (props) => {
 
   const hero = props.hero || {};
+  const compact = props.compact;
   const api = props.api;
   const handleImgReq = props.handleImgReq;
   const showImages = api || handleImgReq;
   const [altDisplayed, setAltDisplayed] = useState(false);
   const [section, setSection] = useState(showImages ? 'hero' : 'text');
-  const sectionAttrs = { hero, api, handleImgReq };
+  const sectionAttrs = { hero, compact, api, handleImgReq, altDisplayed, setAltDisplayed };
 
   return (
-    <div className="d2s-hero">
+    <div className={`d2s-hero` + (compact ? ' d2s-hero--compact' : '')}>
       {hero.err && <div className="red d2s-hero__err">{hero.err}</div>}
       {hero.msg && <div className="d2s-hero__msg">{hero.msg}</div>}
       {hero.header?.name && <div>
-        <div className="d2s-hero__section">
-          <Stats hero={hero} altDisplayed={altDisplayed} />
-        </div>
+        {compact && <Stats {...sectionAttrs} filterFn={(id) => id === 'header'} />}
+        {!compact && <div className="d2s-hero__section">
+          <Stats {...sectionAttrs} />
+        </div>}
         <div className="d2s-hero__section">
           <div className="d2s-hero__menu">
             {showImages && <button className="d2s-hero__menu__btn" onClick={() => setSection('hero')}>Hero</button>}
@@ -37,10 +40,13 @@ const Hero = (props) => {
             {props.onClose && <button className="d2s-hero__menu__btn d2s-hero__menu__close" onClick={props.onClose}>x</button>}
           </div>
           {section === 'hero' && <div>
-            <Equipped {...sectionAttrs} altDisplayed={altDisplayed} setAltDisplayed={setAltDisplayed} />
+            <Equipped {...sectionAttrs} />
             <Inventory {...sectionAttrs} />
-            <Skills hero={hero} />
             {hero.golem_item && <Golem {...sectionAttrs} />}
+            {compact && <div>
+              <Stats {...sectionAttrs} filterFn={(id) => id !== 'header'} />
+            </div>}
+            <Skills hero={hero} />
           </div>}
           {section === 'storage' && <div>
             <Stash {...sectionAttrs} />
@@ -50,7 +56,7 @@ const Hero = (props) => {
             <Mercenary {...sectionAttrs} />
           </div>}
           {section === 'text' && <div>
-            <Text hero={hero} />
+            <Text {...sectionAttrs} />
           </div>}
         </div>
       </div>}

@@ -20,7 +20,7 @@ const Stash = (props) => {
   const items = props.hero.items.filter(item => item.location_id === 0 && item.alt_position_id === 5);
 
 	return (
-		<div className="d2s-hero__component d2s-stash">
+		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-stash'}>
       <div className="d2s-hero__component__name">
 			   <h4>{props.headerLabel}</h4>
       </div>

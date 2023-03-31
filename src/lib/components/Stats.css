@@ -3,11 +3,20 @@
 }
 
 .d2s-stats__section {
+  display: flex;
   margin-bottom: 10px;
 }
 
-.d2s-stats__row {
-  display: flex;
+.d2s-stats__items {
+  margin-right: 10px;
+}
+
+.d2s-stats__items:first-child {
+  flex: 7;
+}
+
+.d2s-stats__items:last-child {
+  flex: 5;
 }
 
 .d2s-stats__item__label {
@@ -16,4 +25,8 @@
 
 .d2s-stats__item__paren {
   color: rgb(193, 161, 129);
+}
+
+.d2s-stats__br + .d2s-stats__first-value {
+  margin-left: 10px;
 }
