@@ -26,9 +26,9 @@ const Golem = (props) => {
   if (lu[item.equipped_id] ) {
     lu[lu[item.equipped_id]] = item;
   }
-  const api = props.api;
-  const handleImgReq = props.handleImgReq;
-  const itemAttrs = { detailed, api, handleImgReq, imgCache };
+  const attrs = { detailed, compact: props.compact };
+  const textAttrs = { ...attrs, text: true, items: [item] };
+  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq, imgCache };
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-golem'}>
@@ -37,20 +37,20 @@ const Golem = (props) => {
       </div>
       {props.text && <div key={item.id}>
         Golem
-        <Items items={[item]} text={true} />
+        <Items {...textAttrs} />
       </div>}
       {!props.text && <div className="inventory">
         <span className="head">
-          {lu.head && <Items items={[lu.head]} {...itemAttrs} />}
+          {lu.head && <Items items={[lu.head]} {...imgAttrs} />}
         </span>
         <span className="torso">
-          {lu.torso && <Items items={[lu.torso]} {...itemAttrs} />}
+          {lu.torso && <Items items={[lu.torso]} {...imgAttrs} />}
         </span>
         <span className="right-hand weapon">
-          {lu.right_hand && <Items items={[lu.right_hand]} {...itemAttrs} />}
+          {lu.right_hand && <Items items={[lu.right_hand]} {...imgAttrs} />}
         </span>
         <span className="left-hand weapon">
-          {lu.left_hand && <Items items={[lu.left_hand]} {...itemAttrs} />}
+          {lu.left_hand && <Items items={[lu.left_hand]} {...imgAttrs} />}
         </span>
       </div>}
 		</div>

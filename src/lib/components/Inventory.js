@@ -19,6 +19,9 @@ const Inventory = (props) => {
 
   const detailChange = (e) => setDetailed(e.ctrlKey);
   const items = props.hero.items.filter(item => item.location_id === 0 && item.alt_position_id === 1);
+  const attrs = { items, detailed, compact: props.compact };
+  const textAttrs = { ...attrs, text: true };
+  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-inventory'}>
@@ -27,9 +30,9 @@ const Inventory = (props) => {
       </div>
       {props.text && <div>
         Inventory
-        <Items items={items} text={true} />
+        <Items {...textAttrs} />
       </div>}
-      {!props.text && <Grid width="10" height="4" items={items} detailed={detailed} api={props.api} handleImgReq={props.handleImgReq} />}
+      {!props.text && <Grid width="10" height="4" {...imgAttrs} />}
 		</div>
 	);
 };

@@ -50,7 +50,7 @@ const Items = (props) => {
       {props.text && <ul className="d2s-items__ul">
         {items.map(item =>
           <li key={`text-${item.location_id}-${item.position_x}-${item.position_y}`}>
-            <Item item={item} text={true} />
+            <Item item={item} text={true} detailed={props.detailed} compact={props.compact} />
           </li>
         )}
       </ul>}

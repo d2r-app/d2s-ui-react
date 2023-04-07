@@ -30,9 +30,9 @@ const Equipped = (props) => {
   const hero = props.hero;
   const items = (hero.is_dead ? hero.corpse_items : hero.items).filter(item => item.location_id === 1);
   items.map(item => lu[item.equipped_id] && (lu[lu[item.equipped_id]] = item));
-  const api = props.api;
-  const handleImgReq = props.handleImgReq;
-  const itemAttrs = { detailed, api, handleImgReq, imgCache };
+  const attrs = { detailed, compact: props.compact };
+  const textAttrs = { ...attrs, text: true, items };
+  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq, imgCache };
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-equipped'}>
@@ -41,52 +41,52 @@ const Equipped = (props) => {
       </div>
       {props.text && <div>
         Equipped
-        <Items items={items} text={true} />
+        <Items {...textAttrs} />
       </div>}
       {!props.text && <div className="inventory">
         <span className="head">
-          {lu.head && <Items items={[lu.head]} {...itemAttrs} />}
+          {lu.head && <Items items={[lu.head]} {...imgAttrs} />}
         </span>
         <span className="neck">
-          {lu.neck && <Items items={[lu.neck]} {...itemAttrs} />}
+          {lu.neck && <Items items={[lu.neck]} {...imgAttrs} />}
         </span>
         <span className="torso">
-          {lu.torso && <Items items={[lu.torso]} {...itemAttrs} />}
+          {lu.torso && <Items items={[lu.torso]} {...imgAttrs} />}
         </span>
         <span className="right-tab tabs">
           <span className="tab" onClick={() => setAltDisplayed(false)}>I</span>
           <span className="tab" onClick={() => setAltDisplayed(true)}>II</span>
         </span>
         {!altDisplayed && <span className="right-hand weapon">
-          {lu.right_hand && <Items items={[lu.right_hand]} {...itemAttrs} />}
+          {lu.right_hand && <Items items={[lu.right_hand]} {...imgAttrs} />}
         </span>}
         {altDisplayed && <span className="alt-right-hand weapon">
-          {lu.alt_right_hand && <Items items={[lu.alt_right_hand]} {...itemAttrs} />}
+          {lu.alt_right_hand && <Items items={[lu.alt_right_hand]} {...imgAttrs} />}
         </span>}
         <span className="left-tab tabs">
           <span className="tab" onClick={() => setAltDisplayed(false)}>I</span>
           <span className="tab" onClick={() => setAltDisplayed(true)}>II</span>
         </span>
         {!altDisplayed && <span className="left-hand weapon">
-          {lu.left_hand && <Items items={[lu.left_hand]} {...itemAttrs} />}
+          {lu.left_hand && <Items items={[lu.left_hand]} {...imgAttrs} />}
         </span>}
         {altDisplayed && <span className="alt-left-hand weapon">
-          {lu.alt_left_hand && <Items items={[lu.alt_left_hand]} {...itemAttrs} />}
+          {lu.alt_left_hand && <Items items={[lu.alt_left_hand]} {...imgAttrs} />}
         </span>}
         <span className="right-finger ring">
-          {lu.right_finger && <Items items={[lu.right_finger]} {...itemAttrs} />}
+          {lu.right_finger && <Items items={[lu.right_finger]} {...imgAttrs} />}
         </span>
         <span className="left-finger ring">
-          {lu.left_finger && <Items items={[lu.left_finger]} {...itemAttrs} />}
+          {lu.left_finger && <Items items={[lu.left_finger]} {...imgAttrs} />}
         </span>
         <span className="waist">
-          {lu.waist && <Items items={[lu.waist]} {...itemAttrs} />}
+          {lu.waist && <Items items={[lu.waist]} {...imgAttrs} />}
         </span>
         <span className="feet">
-          {lu.feet && <Items items={[lu.feet]} {...itemAttrs} />}
+          {lu.feet && <Items items={[lu.feet]} {...imgAttrs} />}
         </span>
         <span className="hands">
-          {lu.hands && <Items items={[lu.hands]} {...itemAttrs} />}
+          {lu.hands && <Items items={[lu.hands]} {...imgAttrs} />}
         </span>
       </div>}
 		</div>
