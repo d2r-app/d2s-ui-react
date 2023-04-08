@@ -10,7 +10,6 @@ const Grid = (props) => {
         detailed={props.detailed}
         api={props.api}
         handleImgReq={props.handleImgReq}
-        imgCache={props.imgCache}
       />
 		</div>
 	);

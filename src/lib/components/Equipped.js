@@ -8,7 +8,6 @@ const Equipped = (props) => {
   const altDisplayed = props.altDisplayed;
   const setAltDisplayed = props.setAltDisplayed;
   const [detailed, setDetailed] = useState(false);
-  const imgCache = {};
 
   useEffect(() => {
     document.addEventListener('keydown', detailChange);
@@ -32,7 +31,7 @@ const Equipped = (props) => {
   items.map(item => lu[item.equipped_id] && (lu[lu[item.equipped_id]] = item));
   const attrs = { detailed, compact: props.compact };
   const textAttrs = { ...attrs, text: true, items };
-  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq, imgCache };
+  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-equipped'}>

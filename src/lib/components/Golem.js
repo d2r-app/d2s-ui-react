@@ -7,7 +7,6 @@ const Golem = (props) => {
 
   const item = props.hero.golem_item;
   const [detailed, setDetailed] = useState(false);
-  const imgCache = {};
 
   useEffect(() => {
     document.addEventListener('keydown', detailChange);
@@ -28,7 +27,7 @@ const Golem = (props) => {
   }
   const attrs = { detailed, compact: props.compact };
   const textAttrs = { ...attrs, text: true, items: [item] };
-  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq, imgCache };
+  const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-golem'}>

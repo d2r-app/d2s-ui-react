@@ -8,7 +8,6 @@ const Item = (props) => {
   const detailed = props.detailed;
   const handleImgReq = props.handleImgReq;
   const [tooltipShown, setTooltipShown] = useState(false);
-  const imgCache = props.imgCache || {};
   let api = (props.api || '').trim();
   if (api && !/\/$/.test(api)) {
     api += '/';
@@ -37,19 +36,13 @@ const Item = (props) => {
     const imgRef = useRef();
     const reqSrc = getImgSrc(item);
     let src = tinySrc;
-    if (api || handleImgReq) {
-      if (imgCache[reqSrc]) {
-        src = imgCache[reqSrc];
-      }
-      else if (handleImgReq) {
-        handleImgReq(reqSrc, (resSrc) => {
-          imgRef.current?.setAttribute('src', resSrc);
-          imgCache[reqSrc] = resSrc;
-        });
-      }
-      else {
-        src = reqSrc;
-      }
+    if (api) {
+      src = reqSrc;
+    }
+    else if (handleImgReq) {
+      handleImgReq(reqSrc, (resSrc) => {
+        imgRef.current?.setAttribute('src', resSrc);
+      });
     }
     return (
       <img ref={imgRef} src={src} className={item.ethereal ? 'ethereal' : null} alt="" />
