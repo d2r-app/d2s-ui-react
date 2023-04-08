@@ -244,6 +244,17 @@ const Item = (props) => {
   const mouseEnter = () => { ReactTooltip.hide(); setTooltipShown(true); }
   const mouseLeave = () => { ReactTooltip.hide(); setTooltipShown(false); }
   const tipId = `tip-${item.location_id}-${item.position_x}-${item.position_y}`;
+  // When not compact, tip defaults to left
+  let tipPlace = !props.compact && typeof props.tipPlace === 'undefined' ? 'left' : props.tipPlace;
+  // When compact, force inventory tooltips away from edge
+  if (props.compact && item.location_id === 0 && (item.alt_position_id === 1 || item.alt_position_id === 5)) {
+    if (item.position_x < 3) {
+      tipPlace = 'right';
+    }
+    else if (item.position_x > 6) {
+      tipPlace = 'left';
+    }
+  }
 
 	return (
 		<div className="d2s-item">
@@ -254,7 +265,7 @@ const Item = (props) => {
           {item.total_nr_of_sockets && tooltipShown && <Sockets />}
         </div>
       </div>}
-      <ReactTooltip place="left" effect="solid" html={true} id={tipId} />
+      <ReactTooltip place={tipPlace} effect="solid" html={true} id={tipId} />
 		</div>
 	);
 };

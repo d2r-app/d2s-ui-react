@@ -8,6 +8,7 @@ const Grid = (props) => {
       <Items
         items={props.items || []}
         detailed={props.detailed}
+        compact={props.compact}
         api={props.api}
         handleImgReq={props.handleImgReq}
       />

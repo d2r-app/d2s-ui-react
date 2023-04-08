@@ -29,12 +29,15 @@ const Equipped = (props) => {
   const hero = props.hero;
   const items = (hero.is_dead ? hero.corpse_items : hero.items).filter(item => item.location_id === 1);
   items.map(item => lu[item.equipped_id] && (lu[lu[item.equipped_id]] = item));
-  const attrs = { detailed, compact: props.compact };
+  const compact = props.compact;
+  const attrs = { detailed, compact };
   const textAttrs = { ...attrs, text: true, items };
   const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
+  const rightTip = compact ? 'right' : undefined;
+  const leftTip = compact ? 'left' : undefined;
 
 	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-equipped'}>
+		<div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-equipped'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -57,20 +60,20 @@ const Equipped = (props) => {
           <span className="tab" onClick={() => setAltDisplayed(true)}>II</span>
         </span>
         {!altDisplayed && <span className="right-hand weapon">
-          {lu.right_hand && <Items items={[lu.right_hand]} {...imgAttrs} />}
+          {lu.right_hand && <Items items={[lu.right_hand]} {...imgAttrs} tipPlace={rightTip} />}
         </span>}
         {altDisplayed && <span className="alt-right-hand weapon">
-          {lu.alt_right_hand && <Items items={[lu.alt_right_hand]} {...imgAttrs} />}
+          {lu.alt_right_hand && <Items items={[lu.alt_right_hand]} {...imgAttrs} tipPlace={rightTip} />}
         </span>}
         <span className="left-tab tabs">
           <span className="tab" onClick={() => setAltDisplayed(false)}>I</span>
           <span className="tab" onClick={() => setAltDisplayed(true)}>II</span>
         </span>
         {!altDisplayed && <span className="left-hand weapon">
-          {lu.left_hand && <Items items={[lu.left_hand]} {...imgAttrs} />}
+          {lu.left_hand && <Items items={[lu.left_hand]} {...imgAttrs} tipPlace={leftTip} />}
         </span>}
         {altDisplayed && <span className="alt-left-hand weapon">
-          {lu.alt_left_hand && <Items items={[lu.alt_left_hand]} {...imgAttrs} />}
+          {lu.alt_left_hand && <Items items={[lu.alt_left_hand]} {...imgAttrs} tipPlace={leftTip} />}
         </span>}
         <span className="right-finger ring">
           {lu.right_finger && <Items items={[lu.right_finger]} {...imgAttrs} />}
@@ -82,10 +85,10 @@ const Equipped = (props) => {
           {lu.waist && <Items items={[lu.waist]} {...imgAttrs} />}
         </span>
         <span className="feet">
-          {lu.feet && <Items items={[lu.feet]} {...imgAttrs} />}
+          {lu.feet && <Items items={[lu.feet]} {...imgAttrs} tipPlace={leftTip} />}
         </span>
         <span className="hands">
-          {lu.hands && <Items items={[lu.hands]} {...imgAttrs} />}
+          {lu.hands && <Items items={[lu.hands]} {...imgAttrs} tipPlace={rightTip} />}
         </span>
       </div>}
 		</div>
