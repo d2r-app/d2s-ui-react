@@ -9,7 +9,9 @@ const Skills = (props) => {
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-skills'}>
-      <div className="d2s-skills__header">Skills</div>
+      {props.headerLabel && <div className="d2s-hero__component__name">
+        {props.headerLabel}
+      </div>}
       <ul>
         {skills.map(skill => <li key={skill.id}>{skill.points} {skill.name}</li>)}
       </ul>

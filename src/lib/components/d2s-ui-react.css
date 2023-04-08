@@ -1,3 +1,16 @@
+.d2s-hero__component__name {
+  display: inline-block;
+  margin-bottom: 1em;
+  padding: 1px 6px;
+  color: #adadad;
+  border-bottom: 1px solid rgba(184, 134, 11, 0.5);
+}
+
+.d2s-mercenary > .inventory,
+.d2s-golem > .inventory {
+  height: 169px;
+}
+
 .d2s-hero__component--compact {
   width: 294px !important;
   zoom: 0.86;

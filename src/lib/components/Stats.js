@@ -474,6 +474,9 @@ const Stats = (props) => {
 
 	return (
 		<div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-stats'}>
+      {props.headerLabel && <div className="d2s-hero__component__name">
+        {props.headerLabel}
+      </div>}
       {sections.map(section => <div key={section.id} className="d2s-stats__section">
         {section.items.map((items, index) => <div key={index} className="d2s-stats__items">
           {items.map((item, index) => <div key={index} className="d2s-stats__item">

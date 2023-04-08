@@ -42,11 +42,10 @@ const Hero = (props) => {
           {section === 'hero' && <div>
             <Equipped {...sectionAttrs} />
             <Inventory {...sectionAttrs} />
-            {hero.golem_item && <Golem {...sectionAttrs} />}
             {compact && <div>
               <Stats {...sectionAttrs} filterFn={(id) => id !== 'header'} />
             </div>}
-            <Skills hero={hero} />
+            <Skills hero={hero} headerLabel="Skills" />
           </div>}
           {section === 'storage' && <div>
             <Stash {...sectionAttrs} />
@@ -54,6 +53,7 @@ const Hero = (props) => {
           </div>}
           {section === 'merc' && <div>
             <Mercenary {...sectionAttrs} />
+            {hero.golem_item && <Golem {...sectionAttrs} headerLabel="Golem" />}
           </div>}
           {section === 'text' && <div>
             <Text {...sectionAttrs} />

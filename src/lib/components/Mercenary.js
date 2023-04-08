@@ -29,9 +29,9 @@ const Mercenary = (props) => {
 
 	return (
 		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-mercenary'}>
-      <div className="d2s-hero__component__name">
-			   <h4>{props.headerLabel}</h4>
-      </div>
+      {props.headerLabel && <div className="d2s-hero__component__name">
+        {props.headerLabel}
+      </div>}
       {props.text && <div>
         Mercenary
         <Items {...textAttrs} />
