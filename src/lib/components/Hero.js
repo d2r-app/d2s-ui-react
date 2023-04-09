@@ -21,6 +21,12 @@ const Hero = (props) => {
   const [altDisplayed, setAltDisplayed] = useState(false);
   const [section, setSection] = useState(showImages ? 'hero' : 'text');
   const sectionAttrs = { hero, compact, api, handleImgReq, altDisplayed, setAltDisplayed };
+  const changeSection = (section) => {
+    setSection(section);
+    if (props.onSectionChange) {
+      props.onSectionChange(section);
+    }
+  };
 
   return (
     <div className={`d2s-hero` + (compact ? ' d2s-hero--compact' : '')}>
@@ -33,10 +39,10 @@ const Hero = (props) => {
         </div>}
         <div className="d2s-hero__section">
           <div className="d2s-hero__menu">
-            {showImages && <button className="d2s-hero__menu__btn" onClick={() => setSection('hero')}>Hero</button>}
-            {showImages && <button className="d2s-hero__menu__btn" onClick={() => setSection('storage')}>Storage</button>}
-            {showImages && <button className="d2s-hero__menu__btn" onClick={() => setSection('merc')}>Mercenary</button>}
-            <button className="d2s-hero__menu__btn" onClick={() => setSection('text')}>{showImages ? 'Text' : 'Items'}</button>
+            {showImages && <button className="d2s-hero__menu__btn" onClick={() => changeSection('hero')}>Hero</button>}
+            {showImages && <button className="d2s-hero__menu__btn" onClick={() => changeSection('storage')}>Storage</button>}
+            {showImages && <button className="d2s-hero__menu__btn" onClick={() => changeSection('merc')}>Mercenary</button>}
+            <button className="d2s-hero__menu__btn" onClick={() => changeSection('text')}>{showImages ? 'Text' : 'Items'}</button>
             {props.onClose && <button className="d2s-hero__menu__btn d2s-hero__menu__close" onClick={props.onClose}>x</button>}
           </div>
           {section === 'hero' && <div>
