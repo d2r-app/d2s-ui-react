@@ -167,6 +167,9 @@ const Item = (props) => {
 
   const getTip = () => {
     let tip = `<div class="${nameCls}">${name}</div>`;
+    if (item.foundTime) {
+      tip += `<div class="d2s-item__found-time">${new Date(item.foundTime).toLocaleString()}</div>`;
+    }
     if (item.defense_rating ) {
       tip += `<div>Defense: ${item.defense_rating}</div>`;
     }
@@ -259,13 +262,12 @@ const Item = (props) => {
 	return (
 		<div className="d2s-item">
       {props.text && <div className={nameCls + ' Item_text'} dangerouslySetInnerHTML={{ __html: name }} data-tip={getTip(item)} data-for={tipId} />}
-      {!props.text && <div>
-        <div className={getItemClass(item) + ' Item_image_container'} data-tip={getTip(item)} data-for={tipId} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
-          <ItemImg item={item} />
-          {item.total_nr_of_sockets && tooltipShown && <Sockets />}
-        </div>
+      {!props.text && <div className={getItemClass(item) + ' Item_image_container'} data-tip={getTip(item)} data-for={tipId} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
+        <ItemImg item={item} />
+        {item.total_nr_of_sockets && tooltipShown && <Sockets />}
       </div>}
-      <ReactTooltip place={tipPlace} effect="solid" html={true} id={tipId} />
+      {props.showInfo && <div className="d2s-item__info" dangerouslySetInnerHTML={{ __html: getTip(item) }} />}
+      {!props.showInfo && <ReactTooltip place={tipPlace} effect="solid" html={true} id={tipId} />}
 		</div>
 	);
 };
