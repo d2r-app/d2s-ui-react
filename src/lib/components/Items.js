@@ -12,7 +12,9 @@ const Items = (props) => {
     item.displayName = item.htmlDisplayName.replace(htmlRegex, '');
   }
 
-  items.sort((a, b) => a.displayName.localeCompare(b.displayName));
+  if (props.text) {
+    items.sort((a, b) => a.displayName.localeCompare(b.displayName));
+  }
 
   function getItemName(item) {
     let name = `<span class="d2s-item__type">${item.type_name}</span>`;
@@ -49,13 +51,13 @@ const Items = (props) => {
 		<div className="d2s-items">
       {props.text && <ul className="d2s-items__ul">
         {items.map(item =>
-          <li key={`text-${item.location_id}-${item.position_x}-${item.position_y}`}>
+          <li key={item.id}>
             <Item item={item} text={true} detailed={props.detailed} compact={props.compact} />
           </li>
         )}
       </ul>}
       {!props.text && <div>
-        {items.map((item, index) => <Item key={index} item={item} {...itemAttrs} />)}
+        {items.map((item, index) => <Item key={item.id} item={item} {...itemAttrs} />)}
       </div>}
 		</div>
 	);
