@@ -47,17 +47,27 @@ const Items = (props) => {
     }).reverse().join('').replace(/<div( class="[^"]*")?><\/div>/g, '');
   }
 
+  function getItemKey(item, index) {
+    if (item.id) {
+      return item.id;
+    }
+    if (typeof item.location_id !== 'undefined' && typeof item.position_x !== 'undefined' && typeof item.position_y !== 'undefined') {
+      return `${item.location_id}-${item.position_x}-${item.position_y}`;
+    }
+    return index;
+  }
+
 	return (
 		<div className="d2s-items">
       {props.text && <ul className="d2s-items__ul">
-        {items.map(item =>
-          <li key={item.id}>
+        {items.map((item, index) =>
+          <li key={getItemKey(item, index)}>
             <Item item={item} text={true} detailed={props.detailed} compact={props.compact} />
           </li>
         )}
       </ul>}
       {!props.text && <div>
-        {items.map((item, index) => <Item key={item.id} item={item} {...itemAttrs} />)}
+        {items.map((item, index) => <Item key={getItemKey(item, index)} item={item} {...itemAttrs} />)}
       </div>}
 		</div>
 	);
