@@ -57,8 +57,8 @@ const Items = (props) => {
     return index;
   }
 
-	return (
-		<div className="d2s-items">
+  return (
+    <div className="d2s-items">
       {props.text && <ul className="d2s-items__ul">
         {items.map((item, index) =>
           <li key={getItemKey(item, index)}>
@@ -69,8 +69,8 @@ const Items = (props) => {
       {!props.text && <div>
         {items.map((item, index) => <Item key={getItemKey(item, index)} item={item} {...itemAttrs} />)}
       </div>}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Items;

@@ -23,8 +23,8 @@ const Cube = (props) => {
   const textAttrs = { ...attrs, text: true };
   const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
-	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-cube'}>
+  return (
+    <div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-cube'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -33,8 +33,8 @@ const Cube = (props) => {
         <Items {...textAttrs} />
       </div>}
       {!props.text && <Grid width="3" height="4" {...imgAttrs} />}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Cube;

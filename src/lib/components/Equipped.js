@@ -36,8 +36,8 @@ const Equipped = (props) => {
   const rightTip = compact ? 'right' : undefined;
   const leftTip = compact ? 'left' : undefined;
 
-	return (
-		<div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-equipped'}>
+  return (
+    <div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-equipped'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -91,8 +91,8 @@ const Equipped = (props) => {
           {lu.hands && <Items items={[lu.hands]} {...imgAttrs} tipPlace={rightTip} />}
         </span>
       </div>}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Equipped;

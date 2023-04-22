@@ -259,8 +259,8 @@ const Item = (props) => {
     }
   }
 
-	return (
-		<div className="d2s-item">
+  return (
+    <div className="d2s-item">
       {props.text && <div className={nameCls + ' Item_text'} dangerouslySetInnerHTML={{ __html: name }} data-tip={getTip(item)} data-for={tipId} />}
       {!props.text && <div className={getItemClass(item) + ' Item_image_container'} data-tip={getTip(item)} data-for={tipId} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
         <ItemImg item={item} />
@@ -268,8 +268,8 @@ const Item = (props) => {
       </div>}
       {props.showInfo && <div className="d2s-item__info" dangerouslySetInnerHTML={{ __html: getTip(item) }} />}
       {!props.showInfo && <ReactTooltip place={tipPlace} effect="solid" html={true} id={tipId} />}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Item;

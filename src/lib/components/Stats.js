@@ -472,8 +472,8 @@ const Stats = (props) => {
 
   }, [hero, compact, attributes, header, skills, props.altDisplayed, props.filterFn]);
 
-	return (
-		<div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-stats'}>
+  return (
+    <div className={'d2s-hero__component' + (compact ? ' d2s-hero__component--compact' : '') + ' d2s-stats'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -505,8 +505,8 @@ const Stats = (props) => {
           </div>)}
         </div>)}
       </div>)}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Stats;

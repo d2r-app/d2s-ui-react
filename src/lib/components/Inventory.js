@@ -23,8 +23,8 @@ const Inventory = (props) => {
   const textAttrs = { ...attrs, text: true };
   const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
-	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-inventory'}>
+  return (
+    <div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-inventory'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -33,8 +33,8 @@ const Inventory = (props) => {
         <Items {...textAttrs} />
       </div>}
       {!props.text && <Grid width="10" height="4" {...imgAttrs} />}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Inventory;

@@ -27,8 +27,8 @@ const Mercenary = (props) => {
   const textAttrs = { ...attrs, text: true, items };
   const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
-	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-mercenary'}>
+  return (
+    <div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-mercenary'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -50,8 +50,8 @@ const Mercenary = (props) => {
           {lu.left_hand && <Items items={[lu.left_hand]} {...imgAttrs} />}
         </span>
       </div>}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Mercenary;

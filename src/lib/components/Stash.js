@@ -22,8 +22,8 @@ const Stash = (props) => {
   const textAttrs = { ...attrs, text: true };
   const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
-	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-stash'}>
+  return (
+    <div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-stash'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -32,8 +32,8 @@ const Stash = (props) => {
         <Items {...textAttrs} />
       </div>}
       {!props.text && <Grid width="10" height="10" {...imgAttrs} />}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Stash;

@@ -12,16 +12,16 @@ const Text = (props) => {
 
   const hero = props.hero;
 
-	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-text'}>
+  return (
+    <div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-text'}>
       <Equipped hero={hero} text={true} />
       <Inventory hero={hero} text={true} />
       {hero.golem_item && <Golem hero={hero} text={true} />}
       <Stash hero={hero} text={true} />
       <Cube hero={hero} text={true} />
       {hero.header?.merc_id && <Mercenary hero={hero} text={true} />}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Text;

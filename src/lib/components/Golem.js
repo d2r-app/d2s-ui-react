@@ -29,8 +29,8 @@ const Golem = (props) => {
   const textAttrs = { ...attrs, text: true, items: [item] };
   const imgAttrs = { ...attrs, api: props.api, handleImgReq: props.handleImgReq };
 
-	return (
-		<div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-golem'}>
+  return (
+    <div className={'d2s-hero__component' + (props.compact ? ' d2s-hero__component--compact' : '') + ' d2s-golem'}>
       {props.headerLabel && <div className="d2s-hero__component__name">
         {props.headerLabel}
       </div>}
@@ -52,8 +52,8 @@ const Golem = (props) => {
           {lu.left_hand && <Items items={[lu.left_hand]} {...imgAttrs} />}
         </span>
       </div>}
-		</div>
-	);
+    </div>
+  );
 };
 
 export default Golem;

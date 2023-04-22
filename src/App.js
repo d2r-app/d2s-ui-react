@@ -4,26 +4,26 @@ import Hero from './lib/components/Hero';
 
 function App() {
 
-	const [hero, setHero] = useState({});
+  const [hero, setHero] = useState({});
 
-	useEffect(() => {
+  useEffect(() => {
     loadHero();
   }, []);
 
-	async function loadHero() {
+  async function loadHero() {
     try {
       const res = await axios.get(`http://${window.location.hostname}:8080/api/hero`);
       setHero({ ...res.data });
-		}
+    }
     catch (e) {
-			console.log('Error loading hero', e);
-		}
-	}
+      console.log('Error loading hero', e);
+    }
+  }
 
   return (
     <div>
       <React.StrictMode>
-			   <Hero hero={hero} api={`http://${window.location.hostname}:8080/api/d2s/img`} />
+         <Hero hero={hero} api={`http://${window.location.hostname}:8080/api/d2s/img`} />
       </React.StrictMode>
     </div>
   );
