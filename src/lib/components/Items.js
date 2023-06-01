@@ -24,11 +24,11 @@ const Items = (props) => {
     if (item.magic_suffix_name) {
       name = `${name} ${item.magic_suffix_name}`;
     }
+    if (item.rare_name2) {
+      name = `${item.rare_name2} ${name}`;
+    }
     if (item.rare_name) {
       name = `${item.rare_name} ${name}`;
-    }
-    if (item.rare_name2) {
-      name = `${name} ${item.rare_name2}`;
     }
     const personalizedName = item.personalized_name ? `${item.personalized_name}'s ` : '';
     if (item.set_name) {
